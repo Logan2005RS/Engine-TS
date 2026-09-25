@@ -28,6 +28,7 @@ import ScriptProvider from '#/engine/script/ScriptProvider.js';
 import ScriptRunner from '#/engine/script/ScriptRunner.js';
 
 import ClientGameMessageHandler from '#/network/game/client/ClientGameMessageHandler.js';
+import { handleResetPinCommand, handleSetPinCommand } from '#/network/game/client/handler/BankPinCommands.js';
 import ClientCheat from '#/network/game/client/model/ClientCheat.js';
 
 import { LoggerEventType } from '#/server/logger/LoggerEventType.js';
@@ -189,7 +190,11 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
         if (player.staffModLevel >= 3) {
             // admin commands (potentially destructive for a live economy)
 
-            if (cmd === 'setvar') {
+            if (cmd === 'setpin') {
+                return handleSetPinCommand(player, args);
+            } else if (cmd === 'resetpin') {
+                return handleResetPinCommand(player, args);
+            } else if (cmd === 'setvar') {
                 // authentic
                 if (args.length < 2) {
                     // ::setvar <variable> <value>
